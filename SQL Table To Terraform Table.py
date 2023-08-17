@@ -1,3 +1,4 @@
+# SQL Table To Terraform Table
 import os
 
 # Get the current working directory
