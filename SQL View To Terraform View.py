@@ -1,5 +1,4 @@
 # SQL View To Terraform View
-
 import os
 
 # Get the current working directory
