@@ -50,7 +50,7 @@ def python_terraform(sql):
         
         # get the Database name,schema name ,table name 
         # Define a regular expression pattern to extract database, schema, and table names
-#         info_pattern = r'CREATE\s+(?:OR\s+REPLACE\s+)?(?:SECURE\s+)?VIEW\s+(?:(?:"?)([A-Z_]+)(?:"?)\.)?(?:"?)([A-Z_]+)(?:"?)\.([A-Z_]+)'
+
         info_pattern = r'CREATE\s+(?:OR\s+REPLACE\s+)?(?:SECURE\s+)?(?:MATERIALIZED\s+)?VIEW\s+(?:(?:"?)([A-Z_]+)(?:"?)\.)?(?:"?)([A-Z_]+)(?:"?)\.([A-Z_]+)'
         
         # Find all matches of the pattern in the SQL code
@@ -93,7 +93,6 @@ def python_terraform(sql):
             value_matches_M_S = re.search(value_pattern_M_S, sql, re.IGNORECASE | re.DOTALL)
               
 #             # Print value_matches_M_S to inspect its content
-
 
             is_secure = bool(value_matches_M_S.group(1))  # Check if the "SECURE" keyword is captured
             is_materialized = bool(value_matches_M_S.group(2))  # Check if the "MATERIALIZED" keyword is captured
