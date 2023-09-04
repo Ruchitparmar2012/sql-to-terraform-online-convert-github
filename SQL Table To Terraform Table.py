@@ -5,8 +5,6 @@ import time  # Import the time module
 # Get the current time in microseconds before starting execution
 start_time = time.perf_counter()
 
-# Rest of your code
-
 # Get the current time in microseconds after finishing execution
 end_time = time.perf_counter()
 
@@ -15,8 +13,6 @@ elapsed_time_microseconds = (end_time - start_time) * 1e6  # Convert to microsec
 
 # Print the elapsed time in microseconds
 print(f"Elapsed time: {elapsed_time_microseconds:.2f} microseconds")
-
-
 
 # Get the current working directory
 current_directory = os.getcwd()
