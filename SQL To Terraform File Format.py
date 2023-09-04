@@ -1,6 +1,6 @@
 import os
 import re
-import time 
+import time  # Import the time module
 
 # Get the current time in microseconds before starting execution
 start_time = time.perf_counter()
@@ -43,7 +43,7 @@ except FileNotFoundError:
 
 except Exception as e:
     print(f"An error occurred: {e}")
-    
+
 import re
 # this code remove double quotes outside form DDL / Including Database, schema, table name 
 def remove_outer_quotes(sql):
@@ -181,7 +181,16 @@ def python_terraform(sql):
             # this pattern for escape_unenclosed_field
             escape_unenclosed_field_matches = re.findall(r"escape_unenclosed_field\s*=\s*(?:'([^']*)'|([^;\n]*))", sql, re.IGNORECASE)
     
+            # this pattern for snappy_compression   
+            snappy_compression_match = re.search(r'\bsnappy_compression\s*=\s*(TRUE|FALSE)\s*', sql, re.IGNORECASE)
+            
+            # this pattern for binary_as_text   
+            binary_as_text_match = re.search(r'\bbinary_as_text\s*=\s*(TRUE|FALSE)\s*', sql, re.IGNORECASE)
 
+            # this pattern for binary_as_text   
+            use_logical_type_match = re.search(r'\buse_logical_type\s*=\s*(TRUE|FALSE)\s*', sql, re.IGNORECASE)
+
+            
             # --------------------------------------------------------------------------------------
             # create File Format  
             resource_File_Format_name = f"resource \"snowflake_file_format\" \"{dynamic__main_db}_{schema_name}_{table_name}\""
@@ -195,7 +204,7 @@ def python_terraform(sql):
             
             if type_match:
                 type_value = type_match.group(1).lower()
-                if type_value == 'csv':
+                if type_value == 'csv' or type_value == 'pcv' or type_value == 'tsv' :
                     if type_match:
                         type_value = type_match.group(1)    
                         code += f"\tformat_type = \"{type_value}\"\n"
@@ -281,7 +290,7 @@ def python_terraform(sql):
                         escape_value = escape_matches[0][0] or escape_matches[0][1]
                         if escape_value in '"':
                             demo =  '\"'
-                            code += f"\tescape_ = \"\{demo}\"\n"  
+                            code += f"\tescape = \"\{demo}\"\n"  
                         else:
                             code += f"\tescape = \"{escape_value}\"\n"                
                     else:
@@ -291,12 +300,12 @@ def python_terraform(sql):
                         escape_unenclosed_field_value = escape_unenclosed_field_matches[0][0] or escape_unenclosed_field_matches[0][1]
                         if escape_unenclosed_field_value in '"':
                             demo =  '\"'
-                            code += f"\tescape_unenclosed_field = \"\{demo}\"\n"  
+                            code += f"\tescape_unenclosed_field = \"\{demo}\"\n" 
                         else:
                             code += f"\tescape_unenclosed_field = \"{escape_unenclosed_field_value}\"\n"  
                     else:
                          demo = "\\\\"
-                         code += f"\ttescape_unenclosed_field = {demo}\n" 
+                         code += f"\tescape_unenclosed_field = \"{demo}\"\n" 
 
 
                     if trim_space_match:
@@ -511,10 +520,126 @@ def python_terraform(sql):
                         code += f"\tskip_byte_order_mark = {skip_byte_order_mark_value}\n"
                     else:
                         code += f"\tskip_byte_order_mark = true\n"
-                
+
+## -----------------------------------------------------------------------------------------------------------------------                
+                ### this is  for avro
+                if type_value == 'avro':
+                    if type_match:
+                        type_value = type_match.group(1)    
+                        code += f"\tformat_type = \"{type_value}\"\n"
+                    else:
+                        pass
+                    if Compression_match:
+                        compression_value = Compression_match.group(1)
+                        code += f"\tcompression = {compression_value}\n"
+                    else:
+                        code += f"\tcompression = AUTO\n"
+
+                    if trim_space_match:
+                        trim_space_value = trim_space_match.group(1).lower()
+                        code += f"\ttrim_space = {trim_space_value}\n"
+                    else:
+                        code += f"\ttrim_space = false\n"
+
+                    if replace_invalid_characters_match:
+                        replace_invalid_characters_value = replace_invalid_characters_match.group(1).lower()
+                        code += f"\treplace_invalid_characters = {replace_invalid_characters_value}\n"                
+                    else:
+                        code += f"\treplace_invalid_characters= false\n" 
+                          
+                    if null_if_match:
+                        null_if_value = null_if_match.group(1)
+                        null_if_value = null_if_value.strip("'")
+                        code += f"\tnull_if = \"{null_if_value}\"\n"                
+                    else:
+                        null_if_value_Default = "\\n"
+                        code += f"\tnull_if = \"\{null_if_value_Default}\"\n" 
+
+## -----------------------------------------------------------------------------------------------------------------------                
+                ### this is  for ORC
+                if type_value == 'orc':
+                    if type_match:
+                        type_value = type_match.group(1)    
+                        code += f"\tformat_type = \"{type_value}\"\n"
+                    else:
+                        pass
+                    if trim_space_match:
+                        trim_space_value = trim_space_match.group(1).lower()
+                        code += f"\ttrim_space = {trim_space_value}\n"
+                    else:
+                        code += f"\ttrim_space = false\n"
+
+                    if replace_invalid_characters_match:
+                        replace_invalid_characters_value = replace_invalid_characters_match.group(1).lower()
+                        code += f"\treplace_invalid_characters = {replace_invalid_characters_value}\n"                
+                    else:
+                        code += f"\treplace_invalid_characters= false\n" 
+                          
+                    if null_if_match:
+                        null_if_value = null_if_match.group(1)
+                        null_if_value = null_if_value.strip("'")
+                        code += f"\tnull_if = \"{null_if_value}\"\n"                
+                    else:
+                        null_if_value_Default = "\\n"
+                        code += f"\tnull_if = \"\{null_if_value_Default}\"\n" 
+
+## -----------------------------------------------------------------------------------------------------------------------                
+                ### this is  for PARQUET
+                if type_value == 'parquet':
+                    if type_match:
+                        type_value = type_match.group(1)    
+                        code += f"\tformat_type = \"{type_value}\"\n"
+                    else:
+                        pass
+                    if Compression_match:
+                        compression_value = Compression_match.group(1)
+                        code += f"\tcompression = {compression_value}\n"
+                    else:
+                        code += f"\tcompression = AUTO\n"
+
+                    if snappy_compression_match:
+                        snappy_compression_value = snappy_compression_match.group(1).lower()
+                        code += f"\tsnappy_compression = {snappy_compression_value}\n"
+                    else:
+                        code += f"\tsnappy_compression = false\n"
+
+                    if binary_as_text_match:
+                        binary_as_text_value = binary_as_text_match.group(1).lower()
+                        code += f"\tbinary_as_text = {binary_as_text_value}\n"
+                    else:
+                        code += f"\tbinary_as_text = false\n"
+
+                    if use_logical_type_match:
+                        use_logical_type_value = use_logical_type_match.group(1).lower()
+                        code += f"\tuse_logical_type = {use_logical_type_value}\n"
+                    else:
+                        code += f"\tuse_logical_type = false\n"
+
+                    
+                    if trim_space_match:
+                        trim_space_value = trim_space_match.group(1).lower()
+                        code += f"\ttrim_space = {trim_space_value}\n"
+                    else:
+                        code += f"\ttrim_space = false\n"
+
+                    if replace_invalid_characters_match:
+                        replace_invalid_characters_value = replace_invalid_characters_match.group(1).lower()
+                        code += f"\treplace_invalid_characters = {replace_invalid_characters_value}\n"                
+                    else:
+                        code += f"\treplace_invalid_characters= false\n" 
+                          
+                    if null_if_match:
+                        null_if_value = null_if_match.group(1)
+                        null_if_value = null_if_value.strip("'")
+                        code += f"\tnull_if = \"{null_if_value}\"\n"                
+                    else:
+                        null_if_value_Default = "\\n"
+                        code += f"\tnull_if = \"\{null_if_value_Default}\"\n" 
+
+            
             else:
                 pass
-         
+                
             
             code += "}\n\n"
 
