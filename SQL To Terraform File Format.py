@@ -43,7 +43,7 @@ except FileNotFoundError:
 
 except Exception as e:
     print(f"An error occurred: {e}")
-
+    
 import re
 # this code remove double quotes outside form DDL / Including Database, schema, table name 
 def remove_outer_quotes(sql):
@@ -190,6 +190,8 @@ def python_terraform(sql):
             # this pattern for binary_as_text   
             use_logical_type_match = re.search(r'\buse_logical_type\s*=\s*(TRUE|FALSE)\s*', sql, re.IGNORECASE)
 
+            # Use re.search to find the match
+            comment_match = re.search(r"comment\s*=\s*'([^']*)'", sql ,re.IGNORECASE)
             
             # --------------------------------------------------------------------------------------
             # create File Format  
@@ -200,7 +202,12 @@ def python_terraform(sql):
             resource_File_Format_name_demo = f'{dynamic__main_db}_{schema_name}_{table_name}'
             resource_File_Format_name_list.append(resource_File_Format_name_demo)
             code += f"\tschema = \"{schema_name}\"\n"
-
+            # Check if a match was found
+            if comment_match:
+                comment_value = comment_match.group(1).strip()
+                code += f"\tcomment_value = \"{comment_value}\"\n"
+            else:
+                pass
             
             if type_match:
                 type_value = type_match.group(1).lower()
