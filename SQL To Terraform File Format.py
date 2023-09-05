@@ -220,9 +220,9 @@ def python_terraform(sql):
             
                     if Compression_match:
                         compression_value = Compression_match.group(1)
-                        code += f"\tcompression = {compression_value}\n"
+                        code += f"\tcompression = \"{compression_value}\"\n"
                     else:
-                        code += f"\tcompression = AUTO\n"
+                        code += f"\tcompression = \"AUTO\"\n"
                         
                     # Check if a match was found
                     if record_delimiter_match:
@@ -233,20 +233,20 @@ def python_terraform(sql):
                         else :
                             code += f"\trecord_delimiter = \"{repr(record_delimiter)[2:-2]}\"\n"
                     else:
-                        code += f"\trecord_delimiter = NONE\n"
+                        code += f"\trecord_delimiter = \"NONE\"\n"
                     
                     if field_delimiter_match:
                         field_delimiter_value = field_delimiter_match.group(1)
                         code += f"\tfield_delimiter = \"{field_delimiter_value}\"\n"
                     else:
-                        code += f"\tfield_delimiter = NONE\n"
+                        code += f"\tfield_delimiter = \"NONE\"\n"
                         
                     if file_extension_match:
                         file_extension_value = file_extension_match.group(1)
                         file_extension_value = file_extension_value.strip("'")
                         code += f"\tfile_extension = \"{file_extension_value}\"\n"
                     else:
-                        code += f"\tfile_extension = NONE\n"
+                        code += f"\tfile_extension = \"NONE\"\n"
                         
                     if parse_header_match:
                         parse_header_value = parse_header_match.group(1).lower()
@@ -256,9 +256,9 @@ def python_terraform(sql):
                         
                     if skip_header_match:
                         skip_header_value = skip_header_match.group(1)
-                        code += f"\tskip_header = {skip_header_value}\n"
+                        code += f"\tskip_header = \"{skip_header_value}\"\n"
                     else:
-                        code += f"\tskip_header = 0\n"
+                        code += f"\tskip_header = \"0\"\n"
                         
                     if skip_blank_lines_match:
                         skip_blank_lines_value = skip_blank_lines_match.group(1).lower()
@@ -271,27 +271,27 @@ def python_terraform(sql):
                         date_format_value = date_format_value.strip("'")
                         code += f"\tdate_format = \"{date_format_value}\"\n"                
                     else:
-                        code += f"\tdate_format = AUTO\n"
+                        code += f"\tdate_format = \"AUTO\"\n"
                         
                     if time_format_match:
                         time_format_value = time_format_match.group(1)
                         time_format_value = time_format_value.strip("'")
                         code += f"\ttime_format = \"{time_format_value}\"\n"
                     else:
-                        code += f"\tdate_format = AUTO\n"
+                        code += f"\tdate_format = \"AUTO\"\n"
 
                     if timestamp_format_match:
                         timestamp_format_value = timestamp_format_match.group(1)
                         timestamp_format_value = timestamp_format_value.strip("'")
                         code += f"\ttimestamp_format = \"{timestamp_format_value}\"\n"
                     else:
-                        code += f"\ttimestamp_format = AUTO\n"
+                        code += f"\ttimestamp_format = \"AUTO\"\n"
 
                     if binary_format_match:
                         binary_format_value = binary_format_match.group(1)
-                        code += f"\tbinary_format = {binary_format_value}\n"
+                        code += f"\tbinary_format = \"{binary_format_value}\"\n"
                     else:
-                        code += f"\tbinary_format = HEX\n"
+                        code += f"\tbinary_format = \"HEX\"\n"
                     
                     if escape_matches:
                         escape_value = escape_matches[0][0] or escape_matches[0][1]
@@ -301,7 +301,7 @@ def python_terraform(sql):
                         else:
                             code += f"\tescape = \"{escape_value}\"\n"                
                     else:
-                        code += f"\tescape = NONE\n" 
+                        code += f"\tescape = \"NONE\"\n" 
                     
                     if escape_unenclosed_field_matches:
                         escape_unenclosed_field_value = escape_unenclosed_field_matches[0][0] or escape_unenclosed_field_matches[0][1]
@@ -319,7 +319,7 @@ def python_terraform(sql):
                         trim_space_value = trim_space_match.group(1).lower()
                         code += f"\ttrim_space = {trim_space_value}\n"
                     else:
-                        code += f"\ttrim_space = FALSE\n"
+                        code += f"\ttrim_space = false\n"
                         
                     if field_optionally_enclosed_by_matches:
                         field_optionally_enclosed_by_value = field_optionally_enclosed_by_matches[0][0] or field_optionally_enclosed_by_matches[0][1]
@@ -329,7 +329,7 @@ def python_terraform(sql):
                         else:
                             code += f"\tfield_optionally_enclosed_by = \"{field_optionally_enclosed_by_value}\"\n"  
                     else:
-                        code += f"\tfield_optionally_enclosed_by = NONE\n" 
+                        code += f"\tfield_optionally_enclosed_by = \"NONE\"\n" 
                         
                     if null_if_match:
                         null_if_value = null_if_match.group(1)
@@ -367,7 +367,7 @@ def python_terraform(sql):
                         encoding_value = Encoding_match.group(1)
                         code += f"\tencoding = \"{encoding_value}\"\n"
                     else:
-                        code += f"\tencoding = UTF8\n"
+                        code += f"\tencoding = \"UTF8\"\n"
 ## -----------------------------------------------------------------------------------------------------------------------                
                 ### this is  for XML
                 if type_value == 'xml':
@@ -378,9 +378,9 @@ def python_terraform(sql):
                         pass
                     if Compression_match:
                         compression_value = Compression_match.group(1)
-                        code += f"\tcompression = {compression_value}\n"
+                        code += f"\tcompression = \"{compression_value}\"\n"
                     else:
-                        code += f"\tcompression = AUTO\n"
+                        code += f"\tcompression = \"AUTO\"\n"
                     
                     if ignore_utf8_errors_match:
                         ignore_utf8_errors_value = ignore_utf8_errors_match.group(1).lower()
@@ -433,36 +433,36 @@ def python_terraform(sql):
                         pass
                     if Compression_match:
                         compression_value = Compression_match.group(1)
-                        code += f"\tcompression = {compression_value}\n"
+                        code += f"\tcompression = \"{compression_value}\"\n"
                     else:
-                        code += f"\tcompression = AUTO\n"
+                        code += f"\tcompression = \"AUTO\"\n"
                         
                     if date_format_match:
                         date_format_value = date_format_match.group(1)
                         date_format_value = date_format_value.strip("'")
                         code += f"\tdate_format = \"{date_format_value}\"\n"                
                     else:
-                        code += f"\tdate_format = AUTO\n"
+                        code += f"\tdate_format = \"AUTO\"\n"
                         
                     if time_format_match:
                         time_format_value = time_format_match.group(1)
                         time_format_value = time_format_value.strip("'")
                         code += f"\ttime_format = \"{time_format_value}\"\n"
                     else:
-                        code += f"\tdate_format = AUTO\n"
+                        code += f"\tdate_format = \"AUTO\"\n"
 
                     if timestamp_format_match:
                         timestamp_format_value = timestamp_format_match.group(1)
                         timestamp_format_value = timestamp_format_value.strip("'")
                         code += f"\ttimestamp_format = \"{timestamp_format_value}\"\n"
                     else:
-                        code += f"\ttimestamp_format = AUTO\n"
+                        code += f"\ttimestamp_format = \"AUTO\"\n"
 
                     if binary_format_match:
                         binary_format_value = binary_format_match.group(1)
-                        code += f"\tbinary_format = {binary_format_value}\n"
+                        code += f"\tbinary_format = \"{binary_format_value}\"\n"
                     else:
-                        code += f"\tbinary_format = HEX\n"
+                        code += f"\tbinary_format = \"HEX\"\n"
                                     
                     if trim_space_match:
                         trim_space_value = trim_space_match.group(1).lower()
@@ -483,7 +483,7 @@ def python_terraform(sql):
                         file_extension_value = file_extension_value.strip("'")
                         code += f"\tfile_extension = \"{file_extension_value}\"\n"
                     else:
-                        code += f"\tfile_extension = NONE\n" 
+                        code += f"\tfile_extension = \"NONE\"\n" 
                         
                     if enable_octal_match:
                         enable_octal_value = enable_octal_match.group(1).lower()
@@ -538,9 +538,9 @@ def python_terraform(sql):
                         pass
                     if Compression_match:
                         compression_value = Compression_match.group(1)
-                        code += f"\tcompression = {compression_value}\n"
+                        code += f"\tcompression = \"{compression_value}\"\n"
                     else:
-                        code += f"\tcompression = AUTO\n"
+                        code += f"\tcompression = \"AUTO\"\n"
 
                     if trim_space_match:
                         trim_space_value = trim_space_match.group(1).lower()
@@ -600,9 +600,9 @@ def python_terraform(sql):
                         pass
                     if Compression_match:
                         compression_value = Compression_match.group(1)
-                        code += f"\tcompression = {compression_value}\n"
+                        code += f"\tcompression = \"{compression_value}\"\n"
                     else:
-                        code += f"\tcompression = AUTO\n"
+                        code += f"\tcompression = \"AUTO\"\n"
 
                     if snappy_compression_match:
                         snappy_compression_value = snappy_compression_match.group(1).lower()
