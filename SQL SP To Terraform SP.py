@@ -1,6 +1,18 @@
-# SQL SP To Terraform SP
-
 import os
+import re
+import time  # Import the time module
+
+# Get the current time in microseconds before starting execution
+start_time = time.perf_counter()
+
+# Get the current time in microseconds after finishing execution
+end_time = time.perf_counter()
+
+# Calculate the elapsed time in microseconds
+elapsed_time_microseconds = (end_time - start_time) * 1e6  # Convert to microseconds
+
+# Print the elapsed time in microseconds
+print(f"Elapsed time: {elapsed_time_microseconds:.2f} microseconds")
 
 # Get the current working directory
 current_directory = os.getcwd()
