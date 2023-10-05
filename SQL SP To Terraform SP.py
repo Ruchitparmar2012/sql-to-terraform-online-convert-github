@@ -43,7 +43,6 @@ except FileNotFoundError:
 
 except Exception as e:
     print(f"An error occurred: {e}")
-
 import re
 # this code remove double quotes outside form DDL / Including Database, schema, table name 
 def remove_outer_quotes(sql):
@@ -96,16 +95,25 @@ def python_terraform(sql):
             # All regex Pattern
 
 
-            statement_match = re.search(r"(AS '(?:[^']|''|[^;])*';)", sql, re.DOTALL)
+            # statement_match = re.search(r"(AS '(?:[^']|''|[^;])*';)", sql, re.DOTALL)
+            # statement_match = re.search(r"(AS '(?:[^']|''|[^;])*';|AS\s*\$\$(?:.|\s)*?\$\$)", sql, re.DOTALL)
+
             
+            statement_match = re.search(r"(AS '(?:[^']|''|[^;])*';|AS\s*\$\$(?:.|\s)*?\$\$)", sql, re.DOTALL)
+
             # Check if there's a match before accessing the group attribute
             if statement_match:
-                statement_matches = statement_match.group(0).strip("AS '").strip("';")
-                extracted_code_single_quotes = statement_matches.replace("''", "'")
+                statement_matches = statement_match.group(0)
+                
+                # Remove $$ at the beginning and end if present
+                # statement_matches = statement_matches.lstrip('AS $$').rstrip('$$')
+            
+                # Handle single quotes and environment replacement as in your original code
+                extracted_code_single_quotes = statement_matches.strip("AS '").strip("';")
                 extracted_code_replaced = re.sub(r'(_PROD|_DEV)', r'_${var.SF_ENVIRONMENT}', extracted_code_single_quotes)
+                extracted_code_replaced = extracted_code_replaced.replace("$$","")
             else:
                 pass
-
             
             sql = sql.upper()
         
@@ -181,8 +189,7 @@ def python_terraform(sql):
                 # Replace single quotes with double quotes
                 packages_value = packages_value.replace("'", "\"")
 
-            else:
-                print("No match found for PACKAGES.")
+       
     
 
             # -----------------------------------------------------------------------------------------------
