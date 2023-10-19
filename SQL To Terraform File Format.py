@@ -43,8 +43,8 @@ except FileNotFoundError:
 
 except Exception as e:
     print(f"An error occurred: {e}")
-    
-import re
+ 
+
 # this code remove double quotes outside form DDL / Including Database, schema, table name 
 def remove_outer_quotes(sql):
     ls1 = sql.split("(")[0].replace('"','')
@@ -208,7 +208,159 @@ def python_terraform(sql):
                 code += f"\tcomment_value = \"{comment_value}\"\n"
             else:
                 pass
-            
+
+            if type_match!=True:
+                code += f"\tformat_type = \"CSV\"\n"
+                if Compression_match:
+                        compression_value = Compression_match.group(1)
+                        code += f"\tcompression = \"{compression_value}\"\n"
+                else:
+                        code += f"\tcompression = \"AUTO\"\n"
+                        
+                # Check if a match was found
+                if record_delimiter_match:
+                    record_delimiter = record_delimiter_match.group(1)
+                    if record_delimiter.lower() == 'none':
+                        code += f"\trecord_delimiter = NONE\n"
+                    else :
+                        code += f"\trecord_delimiter = \"{repr(record_delimiter)[2:-2]}\"\n"
+                else:
+                    code += f"\trecord_delimiter = \"NONE\"\n"
+                
+                if field_delimiter_match:
+                    field_delimiter_value = field_delimiter_match.group(1)
+                    code += f"\tfield_delimiter = \"{field_delimiter_value}\"\n"
+                else:
+                    code += f"\tfield_delimiter = \"NONE\"\n"
+                    
+                if file_extension_match:
+                    file_extension_value = file_extension_match.group(1)
+                    file_extension_value = file_extension_value.strip("'")
+                    code += f"\tfile_extension = \"{file_extension_value}\"\n"
+                else:
+                    code += f"\tfile_extension = \"NONE\"\n"
+                    
+                if parse_header_match:
+                    parse_header_value = parse_header_match.group(1).lower()
+                    code += f"\tparse_header = {parse_header_value}\n"                
+                else:
+                    code += f"\tparse_header =  false\n"
+                    
+                if skip_header_match:
+                    skip_header_value = skip_header_match.group(1)
+                    code += f"\tskip_header = \"{skip_header_value}\"\n"
+                else:
+                    code += f"\tskip_header = \"0\"\n"
+                    
+                if skip_blank_lines_match:
+                    skip_blank_lines_value = skip_blank_lines_match.group(1).lower()
+                    code += f"\tskip_blank_lines = {skip_blank_lines_value} \n"                
+                else:
+                    code += f"\tskip_blank_lines = false\n"
+                    
+                if date_format_match:
+                    date_format_value = date_format_match.group(1)
+                    date_format_value = date_format_value.strip("'")
+                    code += f"\tdate_format = \"{date_format_value}\"\n"                
+                else:
+                    code += f"\tdate_format = \"AUTO\"\n"
+                    
+                if time_format_match:
+                    time_format_value = time_format_match.group(1)
+                    time_format_value = time_format_value.strip("'")
+                    code += f"\ttime_format = \"{time_format_value}\"\n"
+                else:
+                    code += f"\tdate_format = \"AUTO\"\n"
+
+                if timestamp_format_match:
+                    timestamp_format_value = timestamp_format_match.group(1)
+                    timestamp_format_value = timestamp_format_value.strip("'")
+                    code += f"\ttimestamp_format = \"{timestamp_format_value}\"\n"
+                else:
+                    code += f"\ttimestamp_format = \"AUTO\"\n"
+
+                if binary_format_match:
+                    binary_format_value = binary_format_match.group(1)
+                    code += f"\tbinary_format = \"{binary_format_value}\"\n"
+                else:
+                    code += f"\tbinary_format = \"HEX\"\n"
+                
+                if escape_matches:
+                    escape_value = escape_matches[0][0] or escape_matches[0][1]
+                    if escape_value in '"':
+                        demo =  '\"'
+                        code += f"\tescape = \"\{demo}\"\n"  
+                    else:
+                        code += f"\tescape = \"{escape_value}\"\n"                
+                else:
+                    code += f"\tescape = \"NONE\"\n" 
+                
+                if escape_unenclosed_field_matches:
+                    escape_unenclosed_field_value = escape_unenclosed_field_matches[0][0] or escape_unenclosed_field_matches[0][1]
+                    if escape_unenclosed_field_value in '"':
+                        demo =  '\"'
+                        code += f"\tescape_unenclosed_field = \"\{demo}\"\n" 
+                    else:
+                        code += f"\tescape_unenclosed_field = \"{escape_unenclosed_field_value}\"\n"  
+                else:
+                     demo = "\\\\"
+                     code += f"\tescape_unenclosed_field = \"{demo}\"\n" 
+
+
+                if trim_space_match:
+                    trim_space_value = trim_space_match.group(1).lower()
+                    code += f"\ttrim_space = {trim_space_value}\n"
+                else:
+                    code += f"\ttrim_space = false\n"
+                    
+                if field_optionally_enclosed_by_matches:
+                    field_optionally_enclosed_by_value = field_optionally_enclosed_by_matches[0][0] or field_optionally_enclosed_by_matches[0][1]
+                    if field_optionally_enclosed_by_value in '"':
+                        demo =  '\"'
+                        code += f"\tfield_optionally_enclosed_by = \"\{demo}\"\n"  
+                    else:
+                        code += f"\tfield_optionally_enclosed_by = \"{field_optionally_enclosed_by_value}\"\n"  
+                else:
+                    code += f"\tfield_optionally_enclosed_by = \"NONE\"\n" 
+                    
+                if null_if_match:
+                    null_if_value = null_if_match.group(1)
+                    null_if_value = null_if_value.strip("'")
+                    code += f"\tnull_if = \"{null_if_value}\"\n"                
+                else:
+                    null_if_value_Default = "\\n"
+                    code += f"\tnull_if = \"\{null_if_value_Default}\"\n" 
+                
+                if error_on_column_count_mismatch_match:
+                    error_on_column_count_mismatch_value = error_on_column_count_mismatch_match.group(1).lower()
+                    code += f"\terror_on_column_count_mismatch = {error_on_column_count_mismatch_value}\n"                
+                else:
+                    code += f"\terror_on_column_count_mismatch_ = true\n"   
+                    
+                if replace_invalid_characters_match:
+                    replace_invalid_characters_value = replace_invalid_characters_match.group(1).lower()
+                    code += f"\treplace_invalid_characters = {replace_invalid_characters_value}\n"
+                else:
+                    code += f"\treplace_invalid_characters = false\n"
+                    
+                if empty_field_as_null_match:
+                    empty_field_as_null_value = empty_field_as_null_match.group(1).lower()
+                    code += f"\tempty_field_as_null = {empty_field_as_null_value}\n"                
+                else:
+                    code += f"\tempty_field_as_null = true\n" 
+                    
+                if skip_byte_order_mark_match:
+                    skip_byte_order_mark_value = skip_byte_order_mark_match.group(1).lower()
+                    code += f"\tskip_byte_order_mark = {skip_byte_order_mark_value}\n"
+                else:
+                    code += f"\tskip_byte_order_mark = true\n"
+                
+                if Encoding_match:
+                    encoding_value = Encoding_match.group(1)
+                    code += f"\tencoding = \"{encoding_value}\"\n"
+                else:
+                    code += f"\tencoding = \"UTF8\"\n"
+## -----------------------------------------------------------------------------------------------------------------------                
             if type_match:
                 type_value = type_match.group(1).lower()
                 if type_value == 'csv' or type_value == 'pcv' or type_value == 'tsv' :
@@ -500,9 +652,9 @@ def python_terraform(sql):
                     
                     if strip_outer_array_match:
                         strip_outer_array_value = strip_outer_array_match.group(1).lower()
-                        code += f"\tallow_deplicate = {allow_deplicate_value}\n"                
+                        code += f"\tstrip_outer_array = {strip_outer_array_value}\n"                
                     else:
-                        code += f"\tallow_deplicate = false\n"              
+                        code += f"\tstrip_outer_array = false\n"              
 
                     if strip_null_values_match:
                         strip_null_values_value = strip_null_values_match.group(1).lower()
