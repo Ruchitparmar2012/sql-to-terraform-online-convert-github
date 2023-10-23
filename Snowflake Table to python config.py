@@ -9,12 +9,12 @@ import os
 import snowflake.connector
 
 # Replace these with your Snowflake account credentials and connection details
-account = 'rx13851.central-india.azure'
-warehouse = 'COMPUTE_WH'
-database = 'DEMO_DB'
-schema = 'DEMO_SCHEMA'
-username = 'Ruchit'
-password = 'Rparmar@5050'
+account = ''
+warehouse = ''
+database = ''
+schema = ''
+username = ''
+password = ''
 
 #  Create the SQL_Files and Table folders
 sql_files_dir = "SQL_Files"
