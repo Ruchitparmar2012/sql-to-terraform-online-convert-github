@@ -55,18 +55,6 @@ def remove_outer_quotes(sql):
     return sql
 
 
-
-import re
-# this code remove double quotes outside form DDL / Including Database, schema, table name 
-def remove_outer_quotes(sql):
-    ls1 = sql.split("(")[0].replace('"','')
-    ls2 = ["("+i for i in sql.split("(")[1:]] 
-    ls2.insert(0,ls1)
-    sql = "".join(ls2)  
-    
-    return sql
-
-
 import re
 resource_table_name_list=  []
 def python_terraform(sql):
