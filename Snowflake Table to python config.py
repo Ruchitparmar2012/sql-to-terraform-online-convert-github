@@ -9,12 +9,12 @@ import os
 import snowflake.connector
 
 # Replace these with your Snowflake account credentials and connection details
-account = ''
+account = ''  # Replace with your Snowflake account URL
 warehouse = ''
 database = ''
 schema = ''
-username = ''
-password = ''
+username = ''  # Replace with your Snowflake username
+password = ''  # Replace with your Snowflake password
 
 #  Create the SQL_Files and Table folders
 sql_files_dir = "SQL_Files"
