@@ -147,6 +147,18 @@ def python_terraform(sql):
                 RUNTIME_VERSION_value = RUNTIME_VERSION_match.group(1).strip()
             else :
                 pass
+
+            # Create a regex pattern for PACKAGES
+            packages_pattern = re.compile(r"PACKAGES\s*=\s*\((.*?)\)",  re.DOTALL | re.IGNORECASE)
+            
+            # Find the value inside the round brackets for PACKAGES
+            matches = packages_pattern.search(sql)
+            
+            if matches:
+                packages_value = matches.group(1)
+                # Replace single quotes with double quotes
+                packages_value = packages_value.replace("'", "\"")
+                
                 
             # Use re.search() to find the first occurrence of the pattern in the SQL code
             statement_match = re.search(r"AS\s+'(.*?)';", sql, re.DOTALL)
@@ -370,6 +382,14 @@ def python_terraform(sql):
                     except AttributeError:
                         pass 
                 elif "RUNTIME_VERSION" not in sql:
+                    pass
+
+                if "PACKAGES" in sql:
+                    try:
+                        code += f"\tpackges = \"[{packages_value}]\"\n"
+                    except AttributeError:
+                        pass
+                elif "PACKAGES" not in sql:
                     pass
                 
                 if "HANDLER" in sql:
